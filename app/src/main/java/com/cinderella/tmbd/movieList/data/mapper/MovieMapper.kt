@@ -1,4 +1,4 @@
-package com.cinderella.tmbd.movieList.data.Mapper
+package com.cinderella.tmbd.movieList.data.mapper
 
 import com.cinderella.tmbd.movieList.data.local.MovieEntity
 import com.cinderella.tmbd.movieList.data.remote.respond.MovieDto
@@ -32,24 +32,24 @@ fun MovieDto.toMovieEntity(category: String): MovieEntity {
 
 fun MovieEntity.toMovie(): Movie {
     return Movie(
-        id = id ?: -1,
-        title = title ?: "",
-        overview = overview ?: "",
-        poster_path = poster_path ?: "",
-        backdrop_path = backdrop_path ?: "",
-        vote_average = vote_average ?: 0.0,
-        release_date = release_date ?: "",
+        id = id,
+        title = title,
+        overview = overview,
+        poster_path = poster_path,
+        backdrop_path = backdrop_path,
+        vote_average = vote_average,
+        release_date = release_date,
         category = category,
-        adult = adult ?: false,
+        adult = adult,
         genre_ids = try {
-            genre_ids?.split(",")?.map{it.toInt()} ?: listOf(-1,-2)
+            genre_ids?.split(",")?.map { it.toInt() } ?: listOf(-1, -2)
         } catch (e: Exception) {
-            listOf(-1,-2)
+            listOf(-1, -2)
         },
-        original_language = original_language ?: "",
-        original_title = original_title ?: "",
-        popularity = popularity ?: 0.0,
-        video = video ?: false,
-        vote_count = vote_count ?: 0
+        original_language = original_language,
+        original_title = original_title,
+        popularity = popularity,
+        video = video,
+        vote_count = vote_count
     )
 }

@@ -1,6 +1,9 @@
-package com.cinderella.tmbd.movieList.di
+package com.cinderella.tmbd.di
 
+import android.app.Application
+import androidx.room.Room
 import com.cinderella.tmbd.BuildConfig
+import com.cinderella.tmbd.movieList.data.local.MovieDatabase
 import com.cinderella.tmbd.movieList.data.remote.MovieApi
 import dagger.Module
 import dagger.Provides
@@ -41,4 +44,10 @@ object AppModule {
     @Provides
     @Singleton
     fun providesMovieApi(retrofit: Retrofit) = retrofit.create(MovieApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesMovieDatabase(app: Application): MovieDatabase {
+        return Room.databaseBuilder(app, MovieDatabase::class.java, "movie_database").build()
+    }
 }

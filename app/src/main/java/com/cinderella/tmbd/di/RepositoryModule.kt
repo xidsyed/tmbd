@@ -1,4 +1,4 @@
-package com.cinderella.tmbd.movieList.di
+package com.cinderella.tmbd.di
 
 import com.cinderella.tmbd.movieList.data.repository.MovieListRepositoryImpl
 import com.cinderella.tmbd.movieList.domain.repository.MovieListRepository

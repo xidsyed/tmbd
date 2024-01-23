@@ -1,16 +1,17 @@
 package com.cinderella.tmbd.movieList.data.remote
 
 import com.cinderella.tmbd.movieList.data.remote.respond.MovieDto
+import com.cinderella.tmbd.movieList.data.remote.respond.MovieListDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApi {
-    @GET("movie/(category)")
+    @GET("movie/{category}")
     suspend fun getMovies(
         @Path("category") category: String,
         @Query("page") page: Int,
-    ): List<MovieDto>
+    ): MovieListDto
 
     companion object {
         const val BASE_URL = "https://api.themoviedb.org/3/"

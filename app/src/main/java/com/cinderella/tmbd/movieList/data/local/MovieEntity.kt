@@ -3,7 +3,7 @@ package com.cinderella.tmbd.movieList.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity()
+@Entity
 data class MovieEntity(
     val adult: Boolean,
     val backdrop_path: String,

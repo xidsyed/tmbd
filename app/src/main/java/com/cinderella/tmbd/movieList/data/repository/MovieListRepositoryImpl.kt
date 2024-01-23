@@ -1,7 +1,8 @@
 package com.cinderella.tmbd.movieList.data.repository
 
-import com.cinderella.tmbd.movieList.data.Mapper.toMovie
-import com.cinderella.tmbd.movieList.data.Mapper.toMovieEntity
+import android.util.Log
+import com.cinderella.tmbd.movieList.data.mapper.toMovie
+import com.cinderella.tmbd.movieList.data.mapper.toMovieEntity
 import com.cinderella.tmbd.movieList.data.local.MovieDatabase
 import com.cinderella.tmbd.movieList.data.remote.MovieApi
 import com.cinderella.tmbd.movieList.domain.model.Movie
@@ -19,14 +20,14 @@ class MovieListRepositoryImpl @Inject constructor(
     override suspend fun getMovieList(
         forceFetchFromRemote: Boolean,
         category: String,
-        page: Int
+        page: Int?
     ): Flow<Resource<List<Movie>>> {
         return flow {
             emit(Resource.Loading())
             val movieDao = movieDatabase.movieDao
-            if (forceFetchFromRemote || movieDao.getMovieCount() == 0) {
+            if (forceFetchFromRemote || movieDao.getMovieListByCategory(category).isEmpty()) {
                 try {
-                    val remoteList = movieApi.getMovies(category, page)
+                    val remoteList = movieApi.getMovies(category, page?:1).results
                     movieDao.upsertMovieList(remoteList.map { it.toMovieEntity(category) })
                 } catch (e: Exception) {
                     emit(Resource.Error("Error Getting Movies"))

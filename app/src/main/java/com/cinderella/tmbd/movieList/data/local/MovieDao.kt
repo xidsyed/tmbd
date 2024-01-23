@@ -16,6 +16,6 @@ interface MovieDao {
     suspend fun getMovieById(id: Int): MovieEntity?
 
     // Check if database empty
-    @Query("SELECT COUNT(*) FROM MovieEntity")
-    suspend fun getMovieCount(): Int
+//    @Query("SELECT COUNT(*) FROM MovieEntity")
+//    suspend fun getMovieCount(): Int
 }
