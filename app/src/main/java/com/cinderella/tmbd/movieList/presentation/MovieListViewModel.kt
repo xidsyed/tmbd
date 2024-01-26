@@ -1,11 +1,8 @@
 package com.cinderella.tmbd.movieList.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cinderella.tmbd.movieList.domain.repository.MovieListRepository
-import com.cinderella.tmbd.movieList.util.Category.POPULAR
-import com.cinderella.tmbd.movieList.util.Category.UPCOMING
 import com.cinderella.tmbd.movieList.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -33,16 +30,16 @@ class MovieListViewModel @Inject constructor(
 
     init {
         getPopularMoviesList(true)
-        getPopularMoviesList(true)
+        getUpcomingMovieList(true)
     }
 
     fun onUiEvent(event: MovieListUiEvent) {
         when (event) {
             is MovieListUiEvent.Paginate -> {
-                if (event.category == POPULAR) {
+                if (event.category == MovieListCategory.POPULAR) {
                     getPopularMoviesList(true)
 
-                } else if (event.category == UPCOMING) {
+                } else if (event.category == MovieListCategory.UPCOMING) {
                     getUpcomingMovieList(true)
                 }
             }
@@ -55,11 +52,12 @@ class MovieListViewModel @Inject constructor(
         }
     }
 
-    fun getPopularMoviesList(forceFetchFromRemote: Boolean) {
+    // TODO : Create a single function for both popular and upcoming movie list
+    private fun getPopularMoviesList(forceFetchFromRemote: Boolean) {
         viewModelScope.launch {
             movieListRepository.getMovieList(
                 forceFetchFromRemote,
-                POPULAR,
+                MovieListCategory.POPULAR.value,
                 movieListState.value.popularMovieListPage
             ).collectLatest { resource ->
                 val data = resource.data
@@ -68,7 +66,6 @@ class MovieListViewModel @Inject constructor(
                         _movieListState.update {
                             it.copy(isLoading = true)
                         }
-                        Log.d("TAG", "getPopularMoviesList: LOADING")
 
                     }
 
@@ -80,7 +77,6 @@ class MovieListViewModel @Inject constructor(
                                 popularMovieList = data!!
                             )
                         }
-                        Log.d("TAG", "getPopularMoviesList: SUCCESS \n ${data}")
                     }
 
 
@@ -88,7 +84,6 @@ class MovieListViewModel @Inject constructor(
                         _movieListState.update {
                             it.copy(isLoading = false)
                         }
-                        Log.d("TAG", "getPopularMoviesList: ERROR ${resource.message}")
 
                         _viewModelEventsStateChannel.send(
                             ViewModelEvent.ErrorEvent(
@@ -101,11 +96,11 @@ class MovieListViewModel @Inject constructor(
         }
     }
 
-    fun getUpcomingMovieList(forceFetchFromRemote: Boolean) {
+    private fun getUpcomingMovieList(forceFetchFromRemote: Boolean) {
         viewModelScope.launch {
             movieListRepository.getMovieList(
                 forceFetchFromRemote,
-                UPCOMING,
+                MovieListCategory.UPCOMING.value,
                 movieListState.value.upcomingMovieListPage
             ).collectLatest { resource ->
                 val data = resource.data

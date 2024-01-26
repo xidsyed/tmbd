@@ -1,9 +1,8 @@
 package com.cinderella.tmbd.movieList.data.repository
 
-import android.util.Log
+import com.cinderella.tmbd.movieList.data.local.MovieDatabase
 import com.cinderella.tmbd.movieList.data.mapper.toMovie
 import com.cinderella.tmbd.movieList.data.mapper.toMovieEntity
-import com.cinderella.tmbd.movieList.data.local.MovieDatabase
 import com.cinderella.tmbd.movieList.data.remote.MovieApi
 import com.cinderella.tmbd.movieList.domain.model.Movie
 import com.cinderella.tmbd.movieList.domain.repository.MovieListRepository

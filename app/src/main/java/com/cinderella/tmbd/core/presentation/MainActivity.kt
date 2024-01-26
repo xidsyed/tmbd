@@ -1,7 +1,6 @@
-package com.cinderella.tmbd
+package com.cinderella.tmbd.core.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,8 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.cinderella.tmbd.movieList.presentation.HomeScreen
-import com.cinderella.tmbd.movieList.util.Screen
+import com.cinderella.tmbd.BuildConfig
+import com.cinderella.tmbd.movieList.presentation.screens.detail.DetailsScreen
 import com.cinderella.tmbd.ui.theme.TMBDTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,15 +38,14 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController, startDestination = Screen.Home.route) {
                         composable(Screen.Home.route) {
-                            HomeScreen()
+                            HomeScreen(navController)
                         }
                         composable(
                             route = Screen.Details.route + "/{movieId}",
                             arguments = listOf(
                                 navArgument("movieId") { type = NavType.IntType }
                             )) {
-                            val movieId = it.arguments?.getString("movieId")
-                            // DetailScreen (movieId)
+                             DetailsScreen()
                         }
                     }
                 }
@@ -58,10 +56,6 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         if (BuildConfig.DEBUG) { // don't even consider it otherwise
-            Log.d(
-                "SCREEN",
-                "Keeping screen on for debugging, detach debugger and force an onResume to turn it off."
-            )
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
@@ -74,4 +68,3 @@ private fun SetBarColor(color: Color) {
         systemUiController.setSystemBarsColor(color)
     }
 }
-

@@ -1,5 +1,6 @@
-package com.cinderella.tmbd.movieList.presentation
+package com.cinderella.tmbd.core.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -37,15 +38,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cinderella.tmbd.R
-import com.cinderella.tmbd.movieList.util.Screen
+import com.cinderella.tmbd.movieList.presentation.MovieListUiEvent
+import com.cinderella.tmbd.movieList.presentation.MovieListViewModel
+import com.cinderella.tmbd.movieList.presentation.screens.movielist.MovieListScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen () {
+fun HomeScreen (navController: NavHostController) {
     val viewModel = hiltViewModel<MovieListViewModel>()
     val state = viewModel.movieListState.collectAsStateWithLifecycle().value
-    val navController = rememberNavController()
+    val bottomNavController = rememberNavController()
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -61,7 +64,7 @@ fun HomeScreen () {
         )
     }, bottomBar = {
         BottomNavigationBar(
-            bottomNavController = navController,
+            bottomNavController = bottomNavController,
             onEvent = viewModel::onUiEvent
         )
     }) {
@@ -71,14 +74,26 @@ fun HomeScreen () {
                 .padding(it)
         ) {
             NavHost(
-                navController = navController,
-                startDestination = Screen.PopularMovieList.route
+                navController = bottomNavController,
+                startDestination = Screen.PopularMovieList.route    // TODO : derive from viewmodel.state.currentScreen
             ) {
                 composable(Screen.PopularMovieList.route) {
-                    // MoviesListScreen(Popular)
+                    Log.d("TAG", "HomeScreen: Popular Route")
+                    MovieListScreen(
+                        state = state,
+                        screen = Screen.PopularMovieList,
+                        navController = navController,
+                        onUiEvent = viewModel::onUiEvent
+                    )
                 }
                 composable(Screen.UpcomingMovieList.route) {
-                    // MoviesListScreen(Upcoming)
+                    Log.d("TAG", "HomeScreen: Upcoming Route")
+                    MovieListScreen(
+                        state = state,
+                        screen = Screen.UpcomingMovieList,
+                        navController = navController,
+                        onUiEvent = viewModel::onUiEvent
+                    )
                 }
             }
         }
